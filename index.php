@@ -1,52 +1,27 @@
-<?php include 'db.php'; ?>
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <title>আমার ডাইনামিক ব্লগ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার গিটহাব ব্লগ</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <h1>আমার ডাইনামিক ব্লগ</h1>
-    <p>PHP ও MySQL দিয়ে তৈরি</p>
+    <h1>আমার পার্সোনাল ব্লগ</h1>
+    <p>GitHub Pages এ হোস্ট করা</p>
 </header>
 
-<nav>
-    <a href="index.php">হোম</a>
-    <a href="admin.php">পোস্ট লিখুন (Admin)</a>
-</nav>
-
 <div class="row">
-    <div class="leftcolumn">
-        
-        <?php
-        // ডেটাবেস থেকে পোস্টগুলো নিয়ে আসা হচ্ছে
-        $sql = "SELECT * FROM posts ORDER BY id DESC";
-        $result = mysqli_query($conn, $sql);
-
-        if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                echo '<div class="card">';
-                echo '<h2>' . $row["title"] . '</h2>';
-                echo '<h5>প্রকাশের সময়: ' . $row["date"] . '</h5>';
-                echo '<div class="fakeimg" style="height:200px;">ছবি</div>';
-                echo '<p>' . $row["content"] . '</p>';
-                echo '</div>';
-            }
-        } else {
-            echo "<p>কোনো পোস্ট পাওয়া যায়নি।</p>";
-        }
-        ?>
-
+    <div class="leftcolumn" id="blog-posts">
+        <!-- এখানে জাভাস্ক্রিপ্ট দিয়ে পোস্ট লোড হবে -->
     </div>
 
     <div class="rightcolumn">
         <div class="card">
             <h3>আমার সম্পর্কে</h3>
-            <p>এটি একটি ডাইনামিক ব্লগ সাইট।</p>
+            <p>আমি কোডিং শিখছি এবং গিটহাবে প্রজেক্ট আপলোড করছি।</p>
         </div>
     </div>
 </div>
@@ -54,6 +29,27 @@
 <div class="footer">
     <h2>কপিরাইট © ২০২৬</h2>
 </div>
+
+<!-- জাভাস্ক্রিপ্ট কোড -->
+<script>
+    fetch('posts.json')
+        .then(response => response.json())
+        .then(posts => {
+            let output = '';
+            posts.forEach(post => {
+                output += `
+                    <div class="card">
+                        <h2>${post.title}</h2>
+                        <h5>প্রকাশের তারিখ: ${post.date}</h5>
+                        <div class="fakeimg" style="background-image: url('${post.image}'); height:200px; background-size: cover;"></div>
+                        <p>${post.content}</p>
+                    </div>
+                `;
+            });
+            document.getElementById('blog-posts').innerHTML = output;
+        })
+        .catch(error => console.error('Error loading posts:', error));
+</script>
 
 </body>
 </html>
