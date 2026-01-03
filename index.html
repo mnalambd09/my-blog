@@ -3,52 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আমার গিটহাব ব্লগ</title>
+    <title>নূরআলম এর টেক ব্লগ</title>
     <link rel="stylesheet" href="style.css">
+    <!-- ফন্ট অসাম আইকন (অপশনাল) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
+<!-- হেডার -->
 <header>
-    <h1>আমার পার্সোনাল ব্লগ</h1>
-    <p>GitHub Pages এ হোস্ট করা</p>
+    <h1>NOORALAM's Tech World</h1>
+    <p>প্রযুক্তি, কোডিং এবং ফিউচার টেকনোলজি</p>
 </header>
 
-<div class="row">
-    <div class="leftcolumn" id="blog-posts">
-        <!-- এখানে জাভাস্ক্রিপ্ট দিয়ে পোস্ট লোড হবে -->
-    </div>
-
-    <div class="rightcolumn">
-        <div class="card">
-            <h3>আমার সম্পর্কে</h3>
-            <p>আমি কোডিং শিখছি এবং গিটহাবে প্রজেক্ট আপলোড করছি।</p>
-        </div>
+<!-- পোস্ট গ্রিড (এখানে সব পোস্ট থাম্বনেইল আকারে থাকবে) -->
+<div class="container">
+    <div class="grid-container" id="blog-posts">
+        <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে পোস্ট লোড হবে -->
     </div>
 </div>
 
+<!-- ফুটার -->
 <div class="footer">
-    <h2>কপিরাইট © ২০২৬</h2>
+    <h2>কপিরাইট © ২০২৬ | ডিজাইন করেছেন NOORALAM</h2>
 </div>
 
-<!-- জাভাস্ক্রিপ্ট কোড -->
+<!-- পোস্ট পড়ার জন্য পপ-আপ মোডাল (Modal) -->
+<div id="postModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img id="modal-img" src="" alt="Post Image">
+        <h2 id="modal-title"></h2>
+        <div class="meta-info">
+            <span id="modal-date"></span> | 
+            <span id="modal-author"></span> | 
+            <span id="modal-category"></span>
+        </div>
+        <div id="modal-body" class="post-text"></div>
+    </div>
+</div>
+
 <script>
+    let allPosts = []; // সব পোস্ট এখানে জমা থাকবে
+
+    // ১. JSON ফাইল থেকে ডেটা আনা
     fetch('posts.json')
         .then(response => response.json())
         .then(posts => {
+            allPosts = posts; // গ্লোবাল ভেরিয়েবলে সেভ রাখা
             let output = '';
             posts.forEach(post => {
                 output += `
-                    <div class="card">
-                        <h2>${post.title}</h2>
-                        <h5>প্রকাশের তারিখ: ${post.date}</h5>
-                        <div class="fakeimg" style="background-image: url('${post.image}'); height:200px; background-size: cover;"></div>
-                        <p>${post.content}</p>
+                    <div class="card" onclick="openPost(${post.id})">
+                        <div class="card-img" style="background-image: url('${post.image}');"></div>
+                        <div class="card-body">
+                            <span class="tag">${post.category}</span>
+                            <h3>${post.title}</h3>
+                            <p class="summary">${post.summary}</p>
+                            <div class="author-info">
+                                <small><i class="fas fa-user"></i> ${post.author}</small>
+                                <small><i class="far fa-calendar-alt"></i> ${post.date}</small>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
             document.getElementById('blog-posts').innerHTML = output;
         })
-        .catch(error => console.error('Error loading posts:', error));
+        .catch(error => console.error('Error:', error));
+
+    // ২. পোস্ট ওপেন করার ফাংশন (Modal Open)
+    function openPost(id) {
+        const post = allPosts.find(p => p.id === id); // ক্লিক করা পোস্টটি খুঁজে বের করা
+        if (post) {
+            document.getElementById('modal-title').innerText = post.title;
+            document.getElementById('modal-date').innerText = post.date;
+            document.getElementById('modal-author').innerText = "লেখক: " + post.author;
+            document.getElementById('modal-category').innerText = post.category;
+            document.getElementById('modal-img').src = post.image;
+            document.getElementById('modal-body').innerHTML = post.content; // পূর্ণ লেখা
+            
+            // মোডাল দেখানো
+            document.getElementById('postModal').style.display = "block";
+            document.body.style.overflow = "hidden"; // পেছনের স্ক্রল বন্ধ করা
+        }
+    }
+
+    // ৩. পোস্ট বন্ধ করার ফাংশন (Modal Close)
+    function closeModal() {
+        document.getElementById('postModal').style.display = "none";
+        document.body.style.overflow = "auto"; // স্ক্রল আবার চালু করা
+    }
+
+    // মোডালের বাইরে ক্লিক করলে বন্ধ হবে
+    window.onclick = function(event) {
+        let modal = document.getElementById('postModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
 </script>
 
 </body>
