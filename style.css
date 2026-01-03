@@ -1,0 +1,84 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: #f1f1f1;
+}
+
+/* হেডার ডিজাইন */
+header {
+    padding: 30px;
+    text-align: center;
+    background: white;
+}
+
+header h1 {
+    font-size: 50px;
+}
+
+/* নেভিগেশন বার */
+nav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+nav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* কলাম লেআউট */
+.leftcolumn {   
+    float: left;
+    width: 75%;
+}
+
+.rightcolumn {
+    float: left;
+    width: 25%;
+    padding-left: 20px;
+}
+
+/* কার্ড ইফেক্ট */
+.card {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* ছবির জন্য ডামি বক্স */
+.fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+    text-align: center; 
+    color: white;
+}
+
+/* ফুটার */
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: #ddd;
+    margin-top: 20px;
+}
+
+/* রেস্পন্সিভ ডিজাইন (মোবাইলের জন্য) */
+@media screen and (max-width: 800px) {
+    .leftcolumn, .rightcolumn {   
+        width: 100%;
+        padding: 0;
+    }
+}
