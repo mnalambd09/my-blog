@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- এসইও এর জন্য ডাইনামিক মেটা ট্যাগ -->
+    <meta name="description" content="NOORALAM Tech Blog - AI, Programming, Future Tech news.">
     <title>NOORALAM Tech Insights</title>
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome Link (আইকনের জন্য) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Analytics Code (এখানে আপনার ট্র্যাকিং কোড বসাবেন) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_ID"></script> -->
 </head>
 <body>
+
+<!-- নেভিগেশন ও থিম টগল -->
+<nav class="navbar">
+    <div class="logo">NOORALAM</div>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+            </div>
+        </label>
+    </div>
+</nav>
 
 <!-- হিরো সেকশন -->
 <header class="hero">
@@ -21,14 +40,24 @@
         
         <!-- সার্চ বার -->
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="কী খুঁজতে চান? (যেমন: AI, Web, Security)...">
-            <button onclick="searchPosts()"><i class="fas fa-search"></i></button>
+            <input type="text" id="searchInput" placeholder="কী খুঁজতে চান? (যেমন: AI, Web)...">
+            <button><i class="fas fa-search"></i></button>
         </div>
     </div>
 </header>
 
-<!-- পোস্ট কন্টেইনার -->
+<!-- মেইন কন্টেইনার -->
 <div class="container">
+    
+    <!-- ক্যাটাগরি ফিল্টার -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterPosts('all')">সব</button>
+        <button class="filter-btn" onclick="filterPosts('AI')">AI & Future</button>
+        <button class="filter-btn" onclick="filterPosts('Programming')">Programming</button>
+        <button class="filter-btn" onclick="filterPosts('Security')">Security</button>
+        <button class="filter-btn" onclick="filterPosts('Gadgets')">Gadgets</button>
+    </div>
+
     <h2 class="section-title">সর্বশেষ প্রযুক্তি সংবাদ <span class="line"></span></h2>
     
     <div class="grid-container" id="blog-posts">
@@ -40,54 +69,29 @@
     </div>
 </div>
 
-<!-- ফুটার (আপনার লিংকসহ) -->
+<!-- নিউজলেটার সেকশন -->
+<section class="newsletter">
+    <div class="newsletter-content">
+        <h2>📩 টেক আপডেট মিস করবেন না!</h2>
+        <p>সপ্তাহের সেরা টেক নিউজগুলো সরাসরি আপনার ইমেইলে পেতে সাবস্ক্রাইব করুন।</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('ধন্যবাদ! সাবস্ক্রাইব করা হয়েছে।');">
+            <input type="email" placeholder="আপনার ইমেইল দিন..." required>
+            <button type="submit">সাবস্ক্রাইব</button>
+        </form>
+    </div>
+</section>
+
+<!-- ফুটার -->
 <footer>
     <div class="footer-content">
         <h3>NOORALAM</h3>
-        <p>Innovation meets Intelligence. Connect with me on social media.</p>
-        
+        <p>Innovation meets Intelligence.</p>
         <div class="socials">
-            <!-- ফেসবুক -->
-            <a href="https://www.facebook.com/mnalambd09" target="_blank" title="Facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <!-- ইনস্টাগ্রাম -->
-            <a href="https://www.instagram.com/mnalambd09/" target="_blank" title="Instagram">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <!-- গিটহাব -->
-            <a href="https://github.com/mnalambd09" target="_blank" title="GitHub">
-                <i class="fab fa-github"></i>
-            </a>
-            <!-- লিংকডইন -->
-            <a href="https://www.linkedin.com/in/noor-alam-ab69b3153/" target="_blank" title="LinkedIn">
-                <i class="fab fa-linkedin-in"></i>
-            </a>
-            <!-- টুইটার / X -->
-            <a href="https://x.com/mnalambd09" target="_blank" title="X (Twitter)">
-                <i class="fab fa-twitter"></i>
-            </a>
-            <!-- পিনটারেস্ট -->
-            <a href="https://www.pinterest.com/mnalambd09/_profile/" target="_blank" title="Pinterest">
-                <i class="fab fa-pinterest"></i>
-            </a>
-            <!-- ইউটিউব -->
-            <a href="https://www.youtube.com/@MNALAMBD09" target="_blank" title="YouTube">
-                <i class="fab fa-youtube"></i>
-            </a>
-             <!-- Quora -->
-             <a href="https://www.quora.com/profile/NOOR-ALAM-93" target="_blank" title="Quora">
-                <i class="fab fa-quora"></i>
-            </a>
-            <!-- পোর্টফোলিও / ওয়েবসাইট -->
-            <a href="https://mnalambd09.github.io/junje-website/" target="_blank" title="Junje Website">
-                <i class="fas fa-globe"></i>
-            </a>
-            <a href="https://mnalambd09.github.io/Md-nooralam/" target="_blank" title="Portfolio">
-                <i class="fas fa-user-circle"></i>
-            </a>
+            <a href="https://www.facebook.com/mnalambd09" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://github.com/mnalambd09" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/noor-alam-ab69b3153/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.youtube.com/@MNALAMBD09" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
-        
         <p class="copyright">Copyright © 2026 NOORALAM. All Rights Reserved.</p>
     </div>
 </footer>
@@ -96,115 +100,48 @@
 <div id="postModal" class="modal">
     <div class="modal-content glass-effect">
         <span class="close-btn" onclick="closeModal()">&times;</span>
+        
         <div class="modal-header-img" id="modal-img-bg"></div>
+        
         <div class="modal-body-content">
-            <span class="modal-tag" id="modal-category"></span>
+            <div class="modal-meta-top">
+                <span class="modal-tag" id="modal-category"></span>
+                <span class="read-time"><i class="far fa-clock"></i> <span id="modal-read-time"></span> min read</span>
+            </div>
+            
             <h2 id="modal-title"></h2>
+            
             <div class="meta-data">
                 <span><i class="fas fa-user-astronaut"></i> <span id="modal-author"></span></span>
-                <span><i class="far fa-clock"></i> <span id="modal-date"></span></span>
+                <span><i class="far fa-calendar-alt"></i> <span id="modal-date"></span></span>
             </div>
+            
             <div id="modal-body" class="full-text"></div>
+            
+            <!-- সোশ্যাল শেয়ার বাটন -->
+            <div class="share-section">
+                <h4>Share this post:</h4>
+                <div class="share-buttons">
+                    <button onclick="shareOn('facebook')" style="background:#3b5998"><i class="fab fa-facebook-f"></i></button>
+                    <button onclick="shareOn('twitter')" style="background:#1DA1F2"><i class="fab fa-twitter"></i></button>
+                    <button onclick="shareOn('linkedin')" style="background:#0077b5"><i class="fab fa-linkedin-in"></i></button>
+                    <button onclick="copyLink()" style="background:#25D366"><i class="fas fa-link"></i></button>
+                </div>
+            </div>
+
+            <!-- কমেন্ট সেকশন (Giscus/Disqus এর জন্য জায়গা) -->
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <div id="comments-container">
+                    <p style="color: grey; text-align: center;">(GitHub-এ হোস্ট করার পর এখানে Giscus সেটআপ করলে কমেন্ট বক্স আসবে)</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    let allPosts = [];
-    let displayedPosts = 0;
-    const postsPerPage = 6; 
-
-    fetch('posts.json')
-        .then(res => res.json())
-        .then(data => {
-            allPosts = data;
-            loadMore(); 
-        })
-        .catch(err => console.log(err));
-
-    function renderPosts(posts) {
-        let container = document.getElementById('blog-posts');
-        posts.forEach(post => {
-            let div = document.createElement('div');
-            div.className = 'card glass-card';
-            div.onclick = () => openPost(post.id);
-            div.innerHTML = `
-                <div class="card-img" style="background-image: url('${post.image}');"></div>
-                <div class="card-content">
-                    <span class="category-badge">${post.category}</span>
-                    <h3>${post.title}</h3>
-                    <p>${post.summary.substring(0, 100)}...</p>
-                    <div class="card-footer">
-                        <small>Read More <i class="fas fa-arrow-right"></i></small>
-                        <small>${post.date}</small>
-                    </div>
-                </div>
-            `;
-            container.appendChild(div);
-        });
-    }
-
-    function loadMore() {
-        let nextPosts = allPosts.slice(displayedPosts, displayedPosts + postsPerPage);
-        renderPosts(nextPosts);
-        displayedPosts += postsPerPage;
-
-        if (displayedPosts >= allPosts.length) {
-            document.getElementById('loadMoreBtn').style.display = 'none';
-        }
-    }
-
-    // সার্চ ফাংশন
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        let query = e.target.value.toLowerCase();
-        let filtered = allPosts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-        
-        let container = document.getElementById('blog-posts');
-        container.innerHTML = ''; 
-        
-        if(filtered.length === 0) {
-            container.innerHTML = '<p style="color:white; text-align:center; width:100%;">কোনো পোস্ট পাওয়া যায়নি!</p>';
-            document.getElementById('loadMoreBtn').style.display = 'none';
-        } else {
-            renderPosts(filtered);
-            document.getElementById('loadMoreBtn').style.display = 'none'; 
-        }
-
-        if(query === '') {
-            container.innerHTML = '';
-            displayedPosts = 0;
-            document.getElementById('loadMoreBtn').style.display = 'block';
-            loadMore();
-        }
-    });
-
-    // মোডাল
-    function openPost(id) {
-        const post = allPosts.find(p => p.id === id);
-        if(post) {
-            document.getElementById('modal-title').innerText = post.title;
-            document.getElementById('modal-date').innerText = post.date;
-            document.getElementById('modal-author').innerText = post.author;
-            document.getElementById('modal-category').innerText = post.category;
-            document.getElementById('modal-body').innerHTML = post.content;
-            document.getElementById('modal-img-bg').style.backgroundImage = `url('${post.image}')`;
-            
-            document.getElementById('postModal').style.display = "flex";
-            document.body.style.overflow = "hidden";
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('postModal').style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('postModal')) {
-            closeModal();
-        }
-    }
-</script>
+<!-- জাভাস্ক্রিপ্ট -->
+<script src="script.js"></script>
 
 </body>
 </html>
