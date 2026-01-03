@@ -1,84 +1,196 @@
+/* বেসিক রিসেট */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #f1f1f1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
 }
 
-/* হেডার ডিজাইন */
+/* হেডার */
 header {
-    padding: 30px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 60px 20px;
     text-align: center;
-    background: white;
 }
 
 header h1 {
-    font-size: 50px;
+    font-size: 3rem;
+    margin-bottom: 10px;
 }
 
-/* নেভিগেশন বার */
-nav {
-    overflow: hidden;
-    background-color: #333;
+/* কন্টেইনার */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
-nav a {
-    float: left;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+/* গ্রিড লেআউট (থাম্বনেইল সিস্টেম) */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* রেস্পন্সিভ গ্রিড */
+    gap: 30px;
 }
 
-nav a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-/* কলাম লেআউট */
-.leftcolumn {   
-    float: left;
-    width: 75%;
-}
-
-.rightcolumn {
-    float: left;
-    width: 25%;
-    padding-left: 20px;
-}
-
-/* কার্ড ইফেক্ট */
+/* কার্ড ডিজাইন */
 .card {
-    background-color: white;
-    padding: 20px;
-    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
-/* ছবির জন্য ডামি বক্স */
-.fakeimg {
-    background-color: #aaa;
-    width: 100%;
+.card:hover {
+    transform: translateY(-5px); /* মাউস নিলে একটু উপরে উঠবে */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.card-img {
+    height: 200px;
+    background-position: center;
+    background-size: cover;
+}
+
+.card-body {
     padding: 20px;
-    text-align: center; 
-    color: white;
+}
+
+.tag {
+    background: #e1ecf4;
+    color: #1e3c72;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.card h3 {
+    margin: 15px 0;
+    font-size: 1.4rem;
+    color: #222;
+}
+
+.summary {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.author-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
 }
 
 /* ফুটার */
 .footer {
-    padding: 20px;
+    background: #222;
+    color: white;
     text-align: center;
-    background: #ddd;
-    margin-top: 20px;
+    padding: 30px;
+    margin-top: 50px;
 }
 
-/* রেস্পন্সিভ ডিজাইন (মোবাইলের জন্য) */
-@media screen and (max-width: 800px) {
-    .leftcolumn, .rightcolumn {   
-        width: 100%;
-        padding: 0;
+/* ================= MODAL (POPUP) DESIGN ================= */
+.modal {
+    display: none; /* শুরুতে লুকানো থাকবে */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8); /* কালো ঝাপসা ব্যাকগ্রাউন্ড */
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+    animation: fadeIn 0.4s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.close-btn {
+    color: #fff;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+}
+
+.close-btn:hover {
+    background: red;
+}
+
+#modal-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#modal-title {
+    padding: 20px 30px 10px 30px;
+    font-size: 2rem;
+}
+
+.meta-info {
+    padding: 0 30px;
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.post-text {
+    padding: 20px 30px 40px 30px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* মোবাইলের জন্য রেস্পন্সিভ */
+@media screen and (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    #modal-img {
+        height: 200px;
+    }
+    header h1 {
+        font-size: 2rem;
     }
 }
