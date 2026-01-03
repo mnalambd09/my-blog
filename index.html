@@ -7,11 +7,12 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome Link (আইকনের জন্য) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<!-- হিরো সেকশন / হেডার -->
+<!-- হিরো সেকশন -->
 <header class="hero">
     <div class="overlay"></div>
     <div class="hero-content">
@@ -39,16 +40,54 @@
     </div>
 </div>
 
-<!-- ফুটার -->
+<!-- ফুটার (আপনার লিংকসহ) -->
 <footer>
     <div class="footer-content">
         <h3>NOORALAM</h3>
-        <p>Innovation meets Intelligence.</p>
+        <p>Innovation meets Intelligence. Connect with me on social media.</p>
+        
         <div class="socials">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-github"></i></a>
+            <!-- ফেসবুক -->
+            <a href="https://www.facebook.com/mnalambd09" target="_blank" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <!-- ইনস্টাগ্রাম -->
+            <a href="https://www.instagram.com/mnalambd09/" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <!-- গিটহাব -->
+            <a href="https://github.com/mnalambd09" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <!-- লিংকডইন -->
+            <a href="https://www.linkedin.com/in/noor-alam-ab69b3153/" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <!-- টুইটার / X -->
+            <a href="https://x.com/mnalambd09" target="_blank" title="X (Twitter)">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <!-- পিনটারেস্ট -->
+            <a href="https://www.pinterest.com/mnalambd09/_profile/" target="_blank" title="Pinterest">
+                <i class="fab fa-pinterest"></i>
+            </a>
+            <!-- ইউটিউব -->
+            <a href="https://www.youtube.com/@MNALAMBD09" target="_blank" title="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+             <!-- Quora -->
+             <a href="https://www.quora.com/profile/NOOR-ALAM-93" target="_blank" title="Quora">
+                <i class="fab fa-quora"></i>
+            </a>
+            <!-- পোর্টফোলিও / ওয়েবসাইট -->
+            <a href="https://mnalambd09.github.io/junje-website/" target="_blank" title="Junje Website">
+                <i class="fas fa-globe"></i>
+            </a>
+            <a href="https://mnalambd09.github.io/Md-nooralam/" target="_blank" title="Portfolio">
+                <i class="fas fa-user-circle"></i>
+            </a>
         </div>
+        
         <p class="copyright">Copyright © 2026 NOORALAM. All Rights Reserved.</p>
     </div>
 </footer>
@@ -73,17 +112,16 @@
 <script>
     let allPosts = [];
     let displayedPosts = 0;
-    const postsPerPage = 6; // প্রথমে কয়টি দেখাবে
+    const postsPerPage = 6; 
 
-    // ডেটা লোড করা
     fetch('posts.json')
         .then(res => res.json())
         .then(data => {
             allPosts = data;
-            loadMore(); // প্রথমবার কল
-        });
+            loadMore(); 
+        })
+        .catch(err => console.log(err));
 
-    // পোস্ট রেন্ডার করার ফাংশন
     function renderPosts(posts) {
         let container = document.getElementById('blog-posts');
         posts.forEach(post => {
@@ -95,7 +133,7 @@
                 <div class="card-content">
                     <span class="category-badge">${post.category}</span>
                     <h3>${post.title}</h3>
-                    <p>${post.summary.substring(0, 80)}...</p>
+                    <p>${post.summary.substring(0, 100)}...</p>
                     <div class="card-footer">
                         <small>Read More <i class="fas fa-arrow-right"></i></small>
                         <small>${post.date}</small>
@@ -106,13 +144,11 @@
         });
     }
 
-    // Load More ফাংশন
     function loadMore() {
         let nextPosts = allPosts.slice(displayedPosts, displayedPosts + postsPerPage);
         renderPosts(nextPosts);
         displayedPosts += postsPerPage;
 
-        // বাটন লুকানো যদি সব পোস্ট শেষ হয়ে যায়
         if (displayedPosts >= allPosts.length) {
             document.getElementById('loadMoreBtn').style.display = 'none';
         }
@@ -124,14 +160,14 @@
         let filtered = allPosts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
         
         let container = document.getElementById('blog-posts');
-        container.innerHTML = ''; // আগের সব ক্লিয়ার করা
+        container.innerHTML = ''; 
         
         if(filtered.length === 0) {
             container.innerHTML = '<p style="color:white; text-align:center; width:100%;">কোনো পোস্ট পাওয়া যায়নি!</p>';
             document.getElementById('loadMoreBtn').style.display = 'none';
         } else {
             renderPosts(filtered);
-            document.getElementById('loadMoreBtn').style.display = 'none'; // সার্চের সময় লোড মোর বন্ধ
+            document.getElementById('loadMoreBtn').style.display = 'none'; 
         }
 
         if(query === '') {
@@ -142,7 +178,7 @@
         }
     });
 
-    // মোডাল ওপেন
+    // মোডাল
     function openPost(id) {
         const post = allPosts.find(p => p.id === id);
         if(post) {
@@ -151,8 +187,6 @@
             document.getElementById('modal-author').innerText = post.author;
             document.getElementById('modal-category').innerText = post.category;
             document.getElementById('modal-body').innerHTML = post.content;
-            
-            // ছবি সেট করা
             document.getElementById('modal-img-bg').style.backgroundImage = `url('${post.image}')`;
             
             document.getElementById('postModal').style.display = "flex";
@@ -164,8 +198,7 @@
         document.getElementById('postModal').style.display = "none";
         document.body.style.overflow = "auto";
     }
-    
-    // বাইরের ক্লিকে বন্ধ
+
     window.onclick = function(event) {
         if (event.target == document.getElementById('postModal')) {
             closeModal();
