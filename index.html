@@ -3,102 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>নূরআলম এর টেক ব্লগ</title>
+    <title>NOORALAM Tech Insights</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- ফন্ট অসাম আইকন (অপশনাল) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-<!-- হেডার -->
-<header>
-    <h1>NOORALAM's Tech World</h1>
-    <p>প্রযুক্তি, কোডিং এবং ফিউচার টেকনোলজি</p>
+<!-- হিরো সেকশন / হেডার -->
+<header class="hero">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1 class="glow-text">NOORALAM'S TECH UNIVERSE</h1>
+        <p class="subtitle">ভবিষ্যৎ প্রযুক্তির জানালা | AI • Cyber • Future</p>
+        
+        <!-- সার্চ বার -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="কী খুঁজতে চান? (যেমন: AI, Web, Security)...">
+            <button onclick="searchPosts()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
 </header>
 
-<!-- পোস্ট গ্রিড (এখানে সব পোস্ট থাম্বনেইল আকারে থাকবে) -->
+<!-- পোস্ট কন্টেইনার -->
 <div class="container">
+    <h2 class="section-title">সর্বশেষ প্রযুক্তি সংবাদ <span class="line"></span></h2>
+    
     <div class="grid-container" id="blog-posts">
-        <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে পোস্ট লোড হবে -->
+        <!-- জাভাস্ক্রিপ্ট দিয়ে পোস্ট লোড হবে -->
+    </div>
+
+    <div class="load-more-container">
+        <button id="loadMoreBtn" onclick="loadMore()">আরও দেখুন <i class="fas fa-arrow-down"></i></button>
     </div>
 </div>
 
 <!-- ফুটার -->
-<div class="footer">
-    <h2>কপিরাইট © ২০২৬ | ডিজাইন করেছেন NOORALAM</h2>
-</div>
-
-<!-- পোস্ট পড়ার জন্য পপ-আপ মোডাল (Modal) -->
-<div id="postModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <img id="modal-img" src="" alt="Post Image">
-        <h2 id="modal-title"></h2>
-        <div class="meta-info">
-            <span id="modal-date"></span> | 
-            <span id="modal-author"></span> | 
-            <span id="modal-category"></span>
+<footer>
+    <div class="footer-content">
+        <h3>NOORALAM</h3>
+        <p>Innovation meets Intelligence.</p>
+        <div class="socials">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
         </div>
-        <div id="modal-body" class="post-text"></div>
+        <p class="copyright">Copyright © 2026 NOORALAM. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- মোডাল (পপ-আপ) -->
+<div id="postModal" class="modal">
+    <div class="modal-content glass-effect">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="modal-header-img" id="modal-img-bg"></div>
+        <div class="modal-body-content">
+            <span class="modal-tag" id="modal-category"></span>
+            <h2 id="modal-title"></h2>
+            <div class="meta-data">
+                <span><i class="fas fa-user-astronaut"></i> <span id="modal-author"></span></span>
+                <span><i class="far fa-clock"></i> <span id="modal-date"></span></span>
+            </div>
+            <div id="modal-body" class="full-text"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    let allPosts = []; // সব পোস্ট এখানে জমা থাকবে
+    let allPosts = [];
+    let displayedPosts = 0;
+    const postsPerPage = 6; // প্রথমে কয়টি দেখাবে
 
-    // ১. JSON ফাইল থেকে ডেটা আনা
+    // ডেটা লোড করা
     fetch('posts.json')
-        .then(response => response.json())
-        .then(posts => {
-            allPosts = posts; // গ্লোবাল ভেরিয়েবলে সেভ রাখা
-            let output = '';
-            posts.forEach(post => {
-                output += `
-                    <div class="card" onclick="openPost(${post.id})">
-                        <div class="card-img" style="background-image: url('${post.image}');"></div>
-                        <div class="card-body">
-                            <span class="tag">${post.category}</span>
-                            <h3>${post.title}</h3>
-                            <p class="summary">${post.summary}</p>
-                            <div class="author-info">
-                                <small><i class="fas fa-user"></i> ${post.author}</small>
-                                <small><i class="far fa-calendar-alt"></i> ${post.date}</small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('blog-posts').innerHTML = output;
-        })
-        .catch(error => console.error('Error:', error));
+        .then(res => res.json())
+        .then(data => {
+            allPosts = data;
+            loadMore(); // প্রথমবার কল
+        });
 
-    // ২. পোস্ট ওপেন করার ফাংশন (Modal Open)
-    function openPost(id) {
-        const post = allPosts.find(p => p.id === id); // ক্লিক করা পোস্টটি খুঁজে বের করা
-        if (post) {
-            document.getElementById('modal-title').innerText = post.title;
-            document.getElementById('modal-date').innerText = post.date;
-            document.getElementById('modal-author').innerText = "লেখক: " + post.author;
-            document.getElementById('modal-category').innerText = post.category;
-            document.getElementById('modal-img').src = post.image;
-            document.getElementById('modal-body').innerHTML = post.content; // পূর্ণ লেখা
-            
-            // মোডাল দেখানো
-            document.getElementById('postModal').style.display = "block";
-            document.body.style.overflow = "hidden"; // পেছনের স্ক্রল বন্ধ করা
+    // পোস্ট রেন্ডার করার ফাংশন
+    function renderPosts(posts) {
+        let container = document.getElementById('blog-posts');
+        posts.forEach(post => {
+            let div = document.createElement('div');
+            div.className = 'card glass-card';
+            div.onclick = () => openPost(post.id);
+            div.innerHTML = `
+                <div class="card-img" style="background-image: url('${post.image}');"></div>
+                <div class="card-content">
+                    <span class="category-badge">${post.category}</span>
+                    <h3>${post.title}</h3>
+                    <p>${post.summary.substring(0, 80)}...</p>
+                    <div class="card-footer">
+                        <small>Read More <i class="fas fa-arrow-right"></i></small>
+                        <small>${post.date}</small>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Load More ফাংশন
+    function loadMore() {
+        let nextPosts = allPosts.slice(displayedPosts, displayedPosts + postsPerPage);
+        renderPosts(nextPosts);
+        displayedPosts += postsPerPage;
+
+        // বাটন লুকানো যদি সব পোস্ট শেষ হয়ে যায়
+        if (displayedPosts >= allPosts.length) {
+            document.getElementById('loadMoreBtn').style.display = 'none';
         }
     }
 
-    // ৩. পোস্ট বন্ধ করার ফাংশন (Modal Close)
-    function closeModal() {
-        document.getElementById('postModal').style.display = "none";
-        document.body.style.overflow = "auto"; // স্ক্রল আবার চালু করা
+    // সার্চ ফাংশন
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        let query = e.target.value.toLowerCase();
+        let filtered = allPosts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+        
+        let container = document.getElementById('blog-posts');
+        container.innerHTML = ''; // আগের সব ক্লিয়ার করা
+        
+        if(filtered.length === 0) {
+            container.innerHTML = '<p style="color:white; text-align:center; width:100%;">কোনো পোস্ট পাওয়া যায়নি!</p>';
+            document.getElementById('loadMoreBtn').style.display = 'none';
+        } else {
+            renderPosts(filtered);
+            document.getElementById('loadMoreBtn').style.display = 'none'; // সার্চের সময় লোড মোর বন্ধ
+        }
+
+        if(query === '') {
+            container.innerHTML = '';
+            displayedPosts = 0;
+            document.getElementById('loadMoreBtn').style.display = 'block';
+            loadMore();
+        }
+    });
+
+    // মোডাল ওপেন
+    function openPost(id) {
+        const post = allPosts.find(p => p.id === id);
+        if(post) {
+            document.getElementById('modal-title').innerText = post.title;
+            document.getElementById('modal-date').innerText = post.date;
+            document.getElementById('modal-author').innerText = post.author;
+            document.getElementById('modal-category').innerText = post.category;
+            document.getElementById('modal-body').innerHTML = post.content;
+            
+            // ছবি সেট করা
+            document.getElementById('modal-img-bg').style.backgroundImage = `url('${post.image}')`;
+            
+            document.getElementById('postModal').style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
     }
 
-    // মোডালের বাইরে ক্লিক করলে বন্ধ হবে
+    function closeModal() {
+        document.getElementById('postModal').style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+    
+    // বাইরের ক্লিকে বন্ধ
     window.onclick = function(event) {
-        let modal = document.getElementById('postModal');
-        if (event.target == modal) {
+        if (event.target == document.getElementById('postModal')) {
             closeModal();
         }
     }
