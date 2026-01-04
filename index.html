@@ -14,11 +14,12 @@
     <!-- ফন্ট এবং স্টাইল -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- ফন্ট অসাম ৬.৪.০ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<!-- ১. নেভিগেশন ও থিম টগল -->
+<!-- নেভিগেশন ও থিম টগল -->
 <nav class="navbar">
     <div class="logo">NOORALAM</div>
     <div class="theme-switch-wrapper">
@@ -32,7 +33,7 @@
     </div>
 </nav>
 
-<!-- ২. হিরো সেকশন -->
+<!-- হিরো সেকশন -->
 <header class="hero">
     <div class="overlay"></div>
     <div class="hero-content">
@@ -47,7 +48,7 @@
     </div>
 </header>
 
-<!-- ৩. মেইন কন্টেইনার -->
+<!-- মেইন কন্টেইনার -->
 <div class="container">
     
     <!-- ক্যাটাগরি ফিল্টার -->
@@ -70,7 +71,7 @@
     </div>
 </div>
 
-<!-- ৪. নিউজলেটার সেকশন -->
+<!-- নিউজলেটার সেকশন -->
 <section class="newsletter">
     <div class="newsletter-content">
         <h2>📩 টেক আপডেট মিস করবেন না!</h2>
@@ -82,22 +83,56 @@
     </div>
 </section>
 
-<!-- ৫. ফুটার -->
+<!-- ফুটার (আপনার সব লিংক সহ) -->
 <footer>
     <div class="footer-content">
         <h3>NOORALAM</h3>
-        <p>Innovation meets Intelligence.</p>
+        <p>Innovation meets Intelligence. Connect with me:</p>
+        
         <div class="socials">
-            <a href="https://www.facebook.com/mnalambd09" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://github.com/mnalambd09" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/noor-alam-ab69b3153/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://www.youtube.com/@MNALAMBD09" target="_blank"><i class="fab fa-youtube"></i></a>
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/mnalambd09" target="_blank" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/mnalambd09/" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <!-- GitHub -->
+            <a href="https://github.com/mnalambd09" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/noor-alam-ab69b3153/" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <!-- X (Twitter) -->
+            <a href="https://x.com/mnalambd09" target="_blank" title="X / Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <!-- YouTube -->
+            <a href="https://www.youtube.com/@MNALAMBD09" target="_blank" title="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <!-- Pinterest -->
+            <a href="https://www.pinterest.com/mnalambd09/_profile/" target="_blank" title="Pinterest">
+                <i class="fab fa-pinterest"></i>
+            </a>
+            <!-- Quora -->
+            <a href="https://www.quora.com/profile/NOOR-ALAM-93" target="_blank" title="Quora">
+                <i class="fab fa-quora"></i>
+            </a>
+            <!-- Portfolio Website -->
+            <a href="https://mnalambd09.github.io/Md-nooralam/" target="_blank" title="Portfolio">
+                <i class="fas fa-user-circle"></i>
+            </a>
         </div>
+        
         <p class="copyright">Copyright © 2026 NOORALAM. All Rights Reserved.</p>
     </div>
 </footer>
 
-<!-- ৬. মোডাল (পপ-আপ) -->
+<!-- মোডাল (পপ-আপ) -->
 <div id="postModal" class="modal">
     <div class="modal-content glass-effect">
         <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -130,7 +165,7 @@
                 </div>
             </div>
 
-            <!-- কমেন্ট সেকশন (Giscus) -->
+            <!-- কমেন্ট সেকশন -->
             <div class="comments-section" style="margin-top: 50px;">
                 <h3>মতামত দিন (Comments)</h3>
                 <div id="comments-container"></div>
@@ -139,197 +174,8 @@
     </div>
 </div>
 
-<!-- ৭. জাভাস্ক্রিপ্ট (সব লজিক এখানে) -->
-<script>
-    let allPosts = [];
-    let displayedPosts = 0;
-    const postsPerPage = 6;
-    let currentCategory = 'all';
-
-    // ১. ডেটা লোড
-    fetch('posts.json')
-        .then(res => res.json())
-        .then(data => {
-            allPosts = data;
-            loadMore();
-            
-            // URL চেক করা (সরাসরি লিংক দিয়ে আসলে)
-            const urlParams = new URLSearchParams(window.location.search);
-            const postId = urlParams.get('id');
-            if (postId) openPost(parseInt(postId));
-        })
-        .catch(err => console.error(err));
-
-    // ২. রিডিং টাইম ক্যালকুলেটর
-    function calculateReadingTime(text) {
-        const words = text.split(/\s+/).length;
-        return Math.ceil(words / 200);
-    }
-
-    // ৩. রেন্ডার পোস্ট
-    function renderPosts(posts) {
-        let container = document.getElementById('blog-posts');
-        posts.forEach(post => {
-            let plainText = post.content.replace(/<[^>]*>?/gm, '');
-            let readTime = calculateReadingTime(plainText);
-
-            let div = document.createElement('div');
-            div.className = 'card glass-card';
-            div.onclick = () => openPost(post.id);
-            div.innerHTML = `
-                <div class="card-img" style="background-image: url('${post.image}');"></div>
-                <div class="card-content">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span class="category-badge">${post.category}</span>
-                        <small style="color:var(--text-muted)">${readTime} min read</small>
-                    </div>
-                    <h3>${post.title}</h3>
-                    <p>${post.summary.substring(0, 80)}...</p>
-                    <div class="card-footer">
-                        <small>Read More <i class="fas fa-arrow-right"></i></small>
-                        <small>${post.date}</small>
-                    </div>
-                </div>`;
-            container.appendChild(div);
-        });
-    }
-
-    // ৪. লোড মোর
-    function loadMore() {
-        let filteredPosts = currentCategory === 'all' 
-            ? allPosts 
-            : allPosts.filter(p => p.category.includes(currentCategory));
-
-        let nextPosts = filteredPosts.slice(displayedPosts, displayedPosts + postsPerPage);
-        renderPosts(nextPosts);
-        displayedPosts += postsPerPage;
-
-        if (displayedPosts >= filteredPosts.length) {
-            document.getElementById('loadMoreBtn').style.display = 'none';
-        } else {
-            document.getElementById('loadMoreBtn').style.display = 'block';
-        }
-    }
-
-    // ৫. ফিল্টার ও সার্চ
-    function filterPosts(category) {
-        currentCategory = category;
-        displayedPosts = 0;
-        document.getElementById('blog-posts').innerHTML = '';
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        loadMore();
-    }
-
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        let query = e.target.value.toLowerCase();
-        let container = document.getElementById('blog-posts');
-        container.innerHTML = '';
-        let searchResults = allPosts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-        
-        if(searchResults.length === 0) container.innerHTML = '<p style="color:white; text-align:center;">কোনো পোস্ট পাওয়া যায়নি!</p>';
-        else renderPosts(searchResults);
-
-        if(query === '') { displayedPosts = 0; loadMore(); }
-    });
-
-    // ৬. পোস্ট ওপেন + Giscus লোড
-    function openPost(id) {
-        const post = allPosts.find(p => p.id === id);
-        if(post) {
-            document.getElementById('modal-title').innerText = post.title;
-            document.getElementById('modal-date').innerText = post.date;
-            document.getElementById('modal-author').innerText = post.author;
-            document.getElementById('modal-category').innerText = post.category;
-            document.getElementById('modal-body').innerHTML = post.content;
-            document.getElementById('modal-img-bg').style.backgroundImage = `url('${post.image}')`;
-            
-            let plainText = post.content.replace(/<[^>]*>?/gm, '');
-            document.getElementById('modal-read-time').innerText = calculateReadingTime(plainText);
-
-            document.getElementById('postModal').style.display = "flex";
-            document.body.style.overflow = "hidden";
-
-            window.history.pushState({id: id}, '', `?id=${id}`);
-            document.title = post.title;
-
-            // কমেন্ট লোড করা
-            loadGiscus(post.title);
-        }
-    }
-
-    // ৭. Giscus লোড ফাংশন (আপনার দেওয়া আইডি দিয়ে আপডেট করা)
-    function loadGiscus(term) {
-        const container = document.getElementById('comments-container');
-        container.innerHTML = ''; // আগের কমেন্ট ক্লিয়ার
-
-        const script = document.createElement('script');
-        script.src = 'https://giscus.app/client.js';
-        script.setAttribute('data-repo', 'mnalambd09/my-blog');
-        script.setAttribute('data-repo-id', 'R_kgDOQy8h-Q');
-        script.setAttribute('data-category', 'Announcements');
-        script.setAttribute('data-category-id', 'DIC_kwDOQy8h-c4C0hbS');
-        script.setAttribute('data-mapping', 'title');
-        script.setAttribute('data-term', term);
-        script.setAttribute('data-strict', '0');
-        script.setAttribute('data-reactions-enabled', '1');
-        script.setAttribute('data-emit-metadata', '0');
-        script.setAttribute('data-input-position', 'top');
-        script.setAttribute('data-theme', 'transparent_dark');
-        script.setAttribute('data-lang', 'en');
-        script.setAttribute('crossorigin', 'anonymous');
-        script.async = true;
-
-        container.appendChild(script);
-    }
-
-    // ৮. মোডাল বন্ধ
-    function closeModal() {
-        document.getElementById('postModal').style.display = "none";
-        document.body.style.overflow = "auto";
-        window.history.pushState({}, '', window.location.pathname);
-        document.title = "NOORALAM Tech Insights";
-        document.getElementById('comments-container').innerHTML = '';
-    }
-
-    // ৯. সোশ্যাল শেয়ার
-    function shareOn(platform) {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent(document.title);
-        let shareUrl = '';
-        if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-        if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-    }
-
-    function copyLink() {
-        navigator.clipboard.writeText(window.location.href);
-        alert("লিংক কপি হয়েছে!");
-    }
-
-    // ১০. থিম টগল
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'light') toggleSwitch.checked = true;
-    }
-    toggleSwitch.addEventListener('change', function(e) {
-        if (e.target.checked) {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-
-    // বাইরের ক্লিকে বন্ধ
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('postModal')) closeModal();
-    }
-</script>
+<!-- জাভাস্ক্রিপ্ট ফাইল লিংক -->
+<script src="script.js"></script>
 
 </body>
 </html>
