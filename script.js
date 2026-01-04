@@ -3,39 +3,30 @@ let displayedPosts = 0;
 const postsPerPage = 6;
 let currentCategory = 'all';
 
-// ১. ডেটা লোড এবং URL চেক করা
+// ১. ডেটা লোড
 fetch('posts.json')
     .then(res => res.json())
     .then(data => {
         allPosts = data;
         loadMore();
-        
-        // যদি লিংকে কোনো পোস্ট আইডি থাকে (যেমন: ?id=5), সেটা অটো ওপেন হবে
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
-        if (postId) {
-            openPost(parseInt(postId));
-        }
+        if (postId) openPost(parseInt(postId));
     })
-    .catch(err => console.error("Data Load Error:", err));
+    .catch(err => console.error(err));
 
-// ২. রিডিং টাইম ক্যালকুলেটর
+// ২. রিডিং টাইম
 function calculateReadingTime(text) {
-    const wordsPerMinute = 200;
     const words = text.split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return minutes;
+    return Math.ceil(words / 200);
 }
 
-// ৩. পোস্ট রেন্ডার ফাংশন
+// ৩. রেন্ডার পোস্ট
 function renderPosts(posts) {
     let container = document.getElementById('blog-posts');
-    
     posts.forEach(post => {
-        // রিডিং টাইম বের করা
-        let plainText = post.content.replace(/<[^>]*>?/gm, ''); // HTML ট্যাগ সরানো
+        let plainText = post.content.replace(/<[^>]*>?/gm, '');
         let readTime = calculateReadingTime(plainText);
-
         let div = document.createElement('div');
         div.className = 'card glass-card';
         div.onclick = () => openPost(post.id);
@@ -48,120 +39,105 @@ function renderPosts(posts) {
                 </div>
                 <h3>${post.title}</h3>
                 <p>${post.summary.substring(0, 80)}...</p>
-                <div class="card-footer">
-                    <small>Read More <i class="fas fa-arrow-right"></i></small>
-                    <small>${post.date}</small>
-                </div>
-            </div>
-        `;
+                <div class="card-footer"><small>Read More <i class="fas fa-arrow-right"></i></small><small>${post.date}</small></div>
+            </div>`;
         container.appendChild(div);
     });
 }
 
-// ৪. লোড মোর ফাংশন
+// ৪. লোড মোর
 function loadMore() {
-    // বর্তমান ক্যাটাগরি অনুযায়ী ফিল্টার করা পোস্ট
-    let filteredPosts = currentCategory === 'all' 
-        ? allPosts 
-        : allPosts.filter(p => p.category.includes(currentCategory));
-
+    let filteredPosts = currentCategory === 'all' ? allPosts : allPosts.filter(p => p.category.includes(currentCategory));
     let nextPosts = filteredPosts.slice(displayedPosts, displayedPosts + postsPerPage);
     renderPosts(nextPosts);
     displayedPosts += postsPerPage;
-
-    // বাটন লুকানো
-    if (displayedPosts >= filteredPosts.length) {
-        document.getElementById('loadMoreBtn').style.display = 'none';
-    } else {
-        document.getElementById('loadMoreBtn').style.display = 'block';
-    }
+    document.getElementById('loadMoreBtn').style.display = displayedPosts >= filteredPosts.length ? 'none' : 'block';
 }
 
-// ৫. ক্যাটাগরি ফিল্টার ফাংশন
+// ৫. ফিল্টার ও সার্চ
 function filterPosts(category) {
     currentCategory = category;
     displayedPosts = 0;
-    document.getElementById('blog-posts').innerHTML = ''; // আগের পোস্ট ক্লিয়ার
-    
-    // বাটন একটিভ ক্লাস চেঞ্জ
-    let buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
+    document.getElementById('blog-posts').innerHTML = '';
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
-
     loadMore();
 }
 
-// ৬. সার্চ ফাংশন
 document.getElementById('searchInput').addEventListener('keyup', (e) => {
     let query = e.target.value.toLowerCase();
     let container = document.getElementById('blog-posts');
-    container.innerHTML = ''; 
-
-    let searchResults = allPosts.filter(p => 
-        p.title.toLowerCase().includes(query) || 
-        p.category.toLowerCase().includes(query)
-    );
-
-    if(searchResults.length === 0) {
-        container.innerHTML = '<p style="color:var(--text); text-align:center; width:100%;">কোনো পোস্ট পাওয়া যায়নি!</p>';
-        document.getElementById('loadMoreBtn').style.display = 'none';
-    } else {
-        renderPosts(searchResults);
-        document.getElementById('loadMoreBtn').style.display = 'none';
-    }
-
-    if(query === '') {
-        displayedPosts = 0;
-        loadMore();
-    }
+    container.innerHTML = '';
+    let searchResults = allPosts.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+    if(searchResults.length === 0) container.innerHTML = '<p style="color:white; text-align:center;">কোনো পোস্ট পাওয়া যায়নি!</p>';
+    else renderPosts(searchResults);
+    if(query === '') { displayedPosts = 0; loadMore(); }
 });
 
-// ৭. মোডাল ওপেন এবং ডাইনামিক ইউআরএল
+// ৬. পোস্ট ওপেন + Giscus
 function openPost(id) {
     const post = allPosts.find(p => p.id === id);
     if(post) {
-        // ডেটা সেট করা
         document.getElementById('modal-title').innerText = post.title;
         document.getElementById('modal-date').innerText = post.date;
         document.getElementById('modal-author').innerText = post.author;
         document.getElementById('modal-category').innerText = post.category;
         document.getElementById('modal-body').innerHTML = post.content;
         document.getElementById('modal-img-bg').style.backgroundImage = `url('${post.image}')`;
-        
-        // রিডিং টাইম
         let plainText = post.content.replace(/<[^>]*>?/gm, '');
         document.getElementById('modal-read-time').innerText = calculateReadingTime(plainText);
-
-        // মোডাল দেখানো
         document.getElementById('postModal').style.display = "flex";
         document.body.style.overflow = "hidden";
-
-        // URL পরিবর্তন করা (যাতে শেয়ার করা যায়)
         window.history.pushState({id: id}, '', `?id=${id}`);
-        document.title = `${post.title} | NOORALAM Blog`; // ব্রাউজার ট্যাব টাইটেল চেঞ্জ
+        document.title = post.title;
+
+        // কমেন্ট লোড
+        loadGiscus(post.title);
     }
 }
 
-// মোডাল বন্ধ করা
+// ৭. Giscus কনফিগারেশন (আপনার আইডি সহ)
+function loadGiscus(term) {
+    const container = document.getElementById('comments-container');
+    container.innerHTML = ''; 
+
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', 'mnalambd09/my-blog');
+    script.setAttribute('data-repo-id', 'R_kgDOQy8h-Q');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDOQy8h-c4C0hbS');
+    script.setAttribute('data-mapping', 'title');
+    script.setAttribute('data-term', term);
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', 'transparent_dark');
+    script.setAttribute('data-lang', 'en');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+
+    container.appendChild(script);
+}
+
+// ৮. মোডাল বন্ধ
 function closeModal() {
     document.getElementById('postModal').style.display = "none";
     document.body.style.overflow = "auto";
-    
-    // URL রিসেট
     window.history.pushState({}, '', window.location.pathname);
     document.title = "NOORALAM Tech Insights";
+    document.getElementById('comments-container').innerHTML = '';
 }
 
-// ৮. সোশ্যাল শেয়ার লজিক
+// ৯. সোশ্যাল ও থিম
 function shareOn(platform) {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(document.title);
     let shareUrl = '';
-
     if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
     if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
     if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-
     window.open(shareUrl, '_blank', 'width=600,height=400');
 }
 
@@ -170,17 +146,12 @@ function copyLink() {
     alert("লিংক কপি হয়েছে!");
 }
 
-// ৯. ডার্ক/লাইট মোড টগল
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
 const currentTheme = localStorage.getItem('theme');
-
 if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
-    if (currentTheme === 'light') {
-        toggleSwitch.checked = true;
-    }
+    if (currentTheme === 'light') toggleSwitch.checked = true;
 }
-
 toggleSwitch.addEventListener('change', function(e) {
     if (e.target.checked) {
         document.documentElement.setAttribute('data-theme', 'light');
@@ -191,9 +162,6 @@ toggleSwitch.addEventListener('change', function(e) {
     }
 });
 
-// বাইরের ক্লিকে মোডাল বন্ধ
 window.onclick = function(event) {
-    if (event.target == document.getElementById('postModal')) {
-        closeModal();
-    }
+    if (event.target == document.getElementById('postModal')) closeModal();
 }
